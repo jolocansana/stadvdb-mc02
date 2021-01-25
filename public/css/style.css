@@ -1,0 +1,56 @@
+#app {
+  height: 100vh;
+  max-width: 100vw;
+}
+
+#sidebar {
+  background-color: lightslategrey;
+  padding: 2em;
+}
+
+#sidebar > b {
+  margin-top: 1em;
+}
+
+#sidebar > a {
+  margin-top: .5em;
+}
+
+#content {
+  padding: 2em;
+}
+
+#content > * {
+  margin-bottom: 35px;
+}
+
+#search-params {
+  background-color: lightgrey;
+  border-radius: .5em;
+  padding: 2em;
+}
+
+.input {
+  margin-top: 2em;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  background-color: white;
+  text-decoration: none;
+  color: black
+}
+
+.blue-hover:hover {
+  background-color: lightblue;
+}
+
+footer {
+  margin-top: 2em;
+  box-sizing: border-box;
+  width: 100%;
+}
