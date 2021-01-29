@@ -37,6 +37,7 @@ app.use(bodyParser.json());
 
 let seasons = ["1996-97","1997-98","1998-99","1999-00","2000-01","2001-02","2002-03","2003-04","2004-05","2005-06","2006-07","2007-08","2008-09","2009-10","2010-11","2011-12","2012-13","2013-14","2014-15","2015-16","2016-17","2017-18","2018-19","2019-20"]
 let conferences = ["Western","Eastern"]
+let draft_decades = ["1960s", "1970s", "1980s", "1990s", "2000s", "2010s"]
 
 app.get('/', (req,res) => {
   res.render('index')
@@ -54,7 +55,8 @@ app.post('/drill-down', (req,res) => {
   ON t.TeamID = st.TeamID 
   JOIN seasons se
   ON st.SeasonID = se.SeasonID
-  GROUP BY t.Conference, t.Division, t.team_abbreviation, se.Season WITH ROLLUP`
+  GROUP BY t.Conference, t.Division, t.team_abbreviation, se.Season
+  ORDER BY t.Conference, t.Division`
 
   let startTime = (new Date).getTime();
 
@@ -73,13 +75,13 @@ app.get('/roll-up', (req,res) => {
 
 app.post('/roll-up', (req,res) => {
   let sql = 
-  `SELECT t.Conference as conf,  t.Division as divi, AVG(st.AvgPoints) as avg
+  `SELECT t.Conference as conf,  t.Division as divi, se.Season as season, AVG(st.AvgPoints) as avg
   FROM teams t 
   JOIN stats st 
   ON t.TeamID = st.TeamID 
-  JOIN players p
-  ON st.PlayerID = p.PlayerID
-  GROUP BY t.Conference, t.Division WITH ROLLUP`
+  JOIN seasons se
+  ON st.SeasonID = se.SeasonID
+  GROUP BY t.Conference, t.Division, se.Season WITH ROLLUP`
 
   let startTime = (new Date).getTime();
 
@@ -109,7 +111,7 @@ app.post('/dice', (req,res) => {
   ON st.SeasonID = se.SeasonID
   WHERE se.Season = "${req.body.season}"
   AND t.Conference = "${req.body.conference}"
-  GROUP BY t.Conference, t.Division, t.team_abbreviation, se.Season WITH ROLLUP`
+  GROUP BY t.Conference, t.Division, t.team_abbreviation, se.Season`
 
   let startTime = (new Date).getTime();
 
@@ -126,27 +128,27 @@ app.post('/dice', (req,res) => {
 
 app.get('/slice', (req,res) => {
   res.render('slice', {
-    seasons: seasons
+    draft_decades: draft_decades
   })
 })
 
 app.post('/slice', (req,res) => {
   let sql = 
-  `SELECT t.Conference as conf, t.Division as divi, t.team_abbreviation as team, se.Season as season, AVG(st.AvgPoints) as avg
+  `SELECT t.Conference as conf, t.Division as divi, t.team_abbreviation as team, p.Draft_Decade as decade, AVG(st.AvgPoints) as avg
   FROM teams t 
   JOIN stats st 
   ON t.TeamID = st.TeamID 
-  JOIN seasons se
-  ON st.SeasonID = se.SeasonID
-  WHERE se.Season = "${req.body.season}"
-  GROUP BY t.Conference, t.Division, t.team_abbreviation, se.Season WITH ROLLUP`
+  JOIN players p
+  ON st.PlayerID = p.PlayerID
+  WHERE p.Draft_Decade = "${req.body.draft_decade}"
+  GROUP BY t.Conference, t.Division, t.team_abbreviation, p.Draft_Decade`
 
   let startTime = (new Date).getTime();
 
   con.query(sql, function (err, resu) {
     if (err) throw err;
     res.render('slice', {
-      seasons: seasons,
+      draft_decades: draft_decades,
       result: resu,
       time: ((new Date).getTime() - startTime)+'ms' 
     })

@@ -15,10 +15,10 @@
         <div class="input">
           <!-- Duplicate this for more inputs. Change id and name of input. -->
           <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Season</label>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Draft Decade</label>
             <div class="col-sm-10">
-              <select class="custom-select" name="season">
-                {{#each seasons}}
+              <select class="custom-select" name="draft_decade">
+                {{#each draft_decades}}
                   <option value="{{this}}">{{this}}</option>
                 {{/each}}
               </select>
@@ -46,13 +46,13 @@
             <th>Conference</th>
             <th>Divison</th>
             <th>Team</th>
-            <th>Season</th>
+            <th>Draft Decade</th>
             <th>Average Points</th>
           </tr>
         </thead>
         <tbody id='tableBody'>
           {{#each result}}
-            <tr><td>{{conf}}</td><td>{{divi}}</td><td>{{team}}</td><td>{{season}}</td><td>{{avg}}</td></tr>
+            <tr><td>{{conf}}</td><td>{{divi}}</td><td>{{team}}</td><td>{{decade}}</td><td>{{avg}}</td></tr>
           {{/each}}
         </tbody>
       </table>
