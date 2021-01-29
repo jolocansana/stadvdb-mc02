@@ -1,0 +1,63 @@
+<div id="app" class="row">
+  {{>sidebar}}
+
+  <div id="content" class="col-10">
+    
+    <h1>Drill Down</h1>
+    
+    <div id="search-params">
+      <h3>
+        Search Parameters
+      </h3>
+      
+      <!-- Form: don't forget to change action to appropriate -->
+      <form method="POST" action="/drill-down" enctype='application/x-www-form-urlencoded' novalidate>
+        <div class="input">
+          <!-- Duplicate this for more inputs. Change id and name of input. -->
+          {{!-- <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Stats</label>
+            <div class="col-sm-10">
+              <select class="custom-select" name="stats">
+                {{#each stats}}
+                  <option value="{{this}}">{{this}}</option>
+                {{/each}}
+              </select>
+            </div>
+          </div> --}}
+          
+          <!-- SUBMIT BUTTON NO NEED TO CHANGE -->
+          <div class="form-group row">
+            <div class="col-sm-10 offset-sm-2">
+              <button type="submit" class='btn btn-success'>Render Report</button>
+            </div>
+          </div>
+          
+        </div>
+      </form>
+
+      <b>Time Elapsed: </b> {{time}}
+
+    </div>
+    
+    <div id="table-holder">
+      <!-- TODO: Change table headers to appropirate results' headers-->
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th>Conference</th>
+            <th>Divison</th>
+            <th>Team</th>
+            <th>Season</th>
+            <th>Average Points</th>
+          </tr>
+        </thead>
+        <tbody id='tableBody'>
+          {{#each result}}
+            <tr><td>{{conf}}</td><td>{{divi}}</td><td>{{team}}</td><td>{{season}}</td><td>{{avg}}</td></tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
