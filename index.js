@@ -103,7 +103,7 @@ app.get('/dice', (req,res) => {
 
 app.post('/dice', (req,res) => {
   let sql = 
-  `SELECT t.Conference as conf, t.Division as divi, t.team_abbreviation as team, se.Season as season, AVG(st.AvgPoints) as avg
+  `SELECT t.Conference as conf, t.Division as divi, t.team_abbreviation as team, se.Season as season, SUM(st.AvgPoints) as sum
   FROM teams t 
   JOIN stats st 
   ON t.TeamID = st.TeamID 
@@ -111,7 +111,8 @@ app.post('/dice', (req,res) => {
   ON st.SeasonID = se.SeasonID
   WHERE se.Season = "${req.body.season}"
   AND t.Conference = "${req.body.conference}"
-  GROUP BY t.Conference, t.Division, t.team_abbreviation, se.Season`
+  GROUP BY t.Conference, t.Division, t.team_abbreviation, se.Season
+  ORDER BY sum DESC`
 
   let startTime = (new Date).getTime();
 
@@ -141,7 +142,8 @@ app.post('/slice', (req,res) => {
   JOIN players p
   ON st.PlayerID = p.PlayerID
   WHERE p.Draft_Decade = "${req.body.draft_decade}"
-  GROUP BY t.Conference, t.Division, t.team_abbreviation, p.Draft_Decade`
+  GROUP BY t.Conference, t.Division, t.team_abbreviation, p.Draft_Decade
+  ORDER BY avg DESC`
 
   let startTime = (new Date).getTime();
 
